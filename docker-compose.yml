@@ -9,6 +9,8 @@ services:
       - API_HASH=${API_HASH}
       - DB_URI=postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - DB_HOST=db
+      - DB_PORT=5432
     depends_on:
       - db
     restart: unless-stopped
