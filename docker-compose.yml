@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - API_ID=${API_ID}
+      - API_HASH=${API_HASH}
+      - DB_URI=postgresql://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
